@@ -342,11 +342,16 @@ end)
 ESX.RegisterServerCallback('esx_property:getPropertyInventory', function(source, cb, owner)
 	local xPlayer    = ESX.GetPlayerFromIdentifier(owner)
 	local blackMoney = 0
+	local money      = 0
 	local items      = {}
 	local weapons    = {}
 
 	TriggerEvent('esx_addonaccount:getAccount', 'property_black_money', xPlayer.identifier, function(account)
 		blackMoney = account.money
+	end)
+
+	TriggerEvent('esx_addonaccount:getAccount', 'property_money', xPlayer.identifier, function(account)
+		money = account.money
 	end)
 
 	TriggerEvent('esx_addoninventory:getInventory', 'property', xPlayer.identifier, function(inventory)
@@ -359,6 +364,7 @@ ESX.RegisterServerCallback('esx_property:getPropertyInventory', function(source,
 
 	cb({
 		blackMoney = blackMoney,
+		money      = money,
 		items      = items,
 		weapons    = weapons
 	})
