@@ -364,18 +364,6 @@ ESX.RegisterServerCallback('esx_property:getPropertyInventory', function(source,
 	})
 end)
 
-ESX.RegisterServerCallback('esx_property:getPlayerInventory', function(source, cb)
-	local xPlayer    = ESX.GetPlayerFromId(source)
-	local blackMoney = xPlayer.getAccount('black_money').money
-	local items      = xPlayer.inventory
-
-	cb({
-		blackMoney = blackMoney,
-		items      = items,
-		weapons    = xPlayer.getLoadout()
-	})
-end)
-
 ESX.RegisterServerCallback('esx_property:getPlayerDressing', function(source, cb)
 	local xPlayer  = ESX.GetPlayerFromId(source)
 
