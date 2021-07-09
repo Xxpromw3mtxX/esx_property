@@ -3,7 +3,8 @@ USE `es_extended`;
 ALTER TABLE `users` ADD COLUMN `last_property` VARCHAR(255) NULL;
 
 INSERT INTO `addon_account` (name, label, shared) VALUES (
-    'property_black_money','Money Sale Property',0
+    ('property_black_money','Money Sale Property',0),
+    ('property_money','Money Property',0)
 );
 
 INSERT INTO `addon_inventory` (name, label, shared) VALUES (
