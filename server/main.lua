@@ -1,7 +1,3 @@
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 function GetProperty(name)
 	for i=1, #Config.Properties, 1 do
 		if Config.Properties[i].name == name then
@@ -68,20 +64,17 @@ MySQL.ready(function()
 
 		for i=1, #properties, 1 do
 			local entering  = nil
-			local exit      = nil
 			local inside    = nil
 			local outside   = nil
 			local isSingle  = nil
 			local isRoom    = nil
 			local isGateway = nil
 			local roomMenu  = nil
+			local inventory = nil
+			local cloakroom = nil
 
 			if properties[i].entering then
 				entering = json.decode(properties[i].entering)
-			end
-
-			if properties[i].exit then
-				exit = json.decode(properties[i].exit)
 			end
 
 			if properties[i].inside then
@@ -114,11 +107,19 @@ MySQL.ready(function()
 				roomMenu = json.decode(properties[i].room_menu)
 			end
 
+			if properties[i].inventory then
+				inventory = json.decode(properties[i].inventory)
+			end
+
+			if properties[i].cloakroom then
+				cloakroom = json.decode(properties[i].cloakroom)
+			end
+
+
 			table.insert(Config.Properties, {
 				name      = properties[i].name,
 				label     = properties[i].label,
 				entering  = entering,
-				exit      = exit,
 				inside    = inside,
 				outside   = outside,
 				ipls      = json.decode(properties[i].ipls),
@@ -127,6 +128,8 @@ MySQL.ready(function()
 				isRoom    = isRoom,
 				isGateway = isGateway,
 				roomMenu  = roomMenu,
+				inventory = inventory,
+				cloakroom = cloakroom,
 				price     = properties[i].price
 			})
 		end
