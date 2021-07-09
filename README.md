@@ -21,6 +21,7 @@ Would you like to own a house? Yes?! That's the rework for you!
     * [esx_addonaccount](https://github.com/ESX-Org/esx_addonaccount)
     * [esx_addoninventory](https://github.com/ESX-Org/esx_addoninventory)
     * [esx_datastore](https://github.com/ESX-Org/esx_datastore)
+    * [esx_inventoryhud](https://github.com/Trsak/esx_inventoryhud)
 * Optional:
     * [esx_realestateagentjob](https://github.com/esx-framework/esx_realestateagentjob)
 
@@ -37,6 +38,8 @@ Would you like to own a house? Yes?! That's the rework for you!
 
 ## Credits/Original Code
 * [esx_property](https://github.com/esx-framework/esx_property)
+* [Trsak](https://github.com/Trsak)
+    * [esx_inventoryhud](https://github.com/Trsak/esx_inventoryhud)
 
 ## Legal
 ### License
