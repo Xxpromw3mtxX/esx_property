@@ -2,7 +2,7 @@
 Would you like to own a house? Yes?! That's the rework for you!
 
 ## Creating Issue
-* Check the [Closed Topics](https://github.com/xxpromw3mtxx/cosmo_hud/issues?q=is%3Aissue+is%3Aclosed) & [Wiki]() before opening an issue to see if your issue has already been Answered.
+* Check the [Closed Topics](https://github.com/xxpromw3mtxx/esx_property/issues?q=is%3Aissue+is%3Aclosed) & [Wiki]() before opening an issue to see if your issue has already been Answered.
 * Do NOT Delete the Pre-Written Text in the issue.
 * Failue to due any of the above will result in Topic being deleted & you being Blocked. The Pre-Written text helps me with getting to the Bottom of the Issues & I hate explaining things over & over.
 
