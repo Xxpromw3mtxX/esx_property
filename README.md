@@ -29,7 +29,7 @@ Would you like to own a house? Yes?! That's the rework for you!
 1. Download Master or Release & Extract the .zip or Open the .zip.
 2. Edit the `config.lua` before starting the script.
 3. Import the included `new_property.sql` file included.
-4. Add `ensure esx_property` to your server.cfg.
+4. Add `ensure phoenix_property` to your server.cfg.
 7. You're set!
 8. **Do not change the name or it will not work.**
 
