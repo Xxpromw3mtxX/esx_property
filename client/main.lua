@@ -4,12 +4,12 @@ local firstSpawn, hasChest, hasAlreadyEnteredMarker = true, false, false
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-	ESX.TriggerServerCallback('phoenix_property:getProperties', function(properties)
+	ESX.TriggerServerCallback('esx_property:getProperties', function(properties)
 		Config.Properties = properties
 		CreateBlips()
 	end)
 
-	ESX.TriggerServerCallback('phoenix_property:getOwnedProperties', function(result)
+	ESX.TriggerServerCallback('esx_property:getOwnedProperties', function(result)
 		for k,v in ipairs(result) do
 			SetPropertyOwned(v.name, true, v.rented)
 		end
@@ -17,12 +17,12 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 end)
 
 -- only used when script is restarting mid-session
-RegisterNetEvent('phoenix_property:sendProperties')
-AddEventHandler('phoenix_property:sendProperties', function(properties)
+RegisterNetEvent('esx_property:sendProperties')
+AddEventHandler('esx_property:sendProperties', function(properties)
 	Config.Properties = properties
 	CreateBlips()
 
-	ESX.TriggerServerCallback('phoenix_property:getOwnedProperties', function(result)
+	ESX.TriggerServerCallback('esx_property:getOwnedProperties', function(result)
 		for k,v in ipairs(result) do
 			SetPropertyOwned(v.name, true, v.rented)
 		end
@@ -101,7 +101,7 @@ function EnterProperty(name, owner)
 		end
 	end
 
-	TriggerServerEvent('phoenix_property:saveLastProperty', name)
+	TriggerServerEvent('esx_property:saveLastProperty', name)
 
 	Citizen.CreateThread(function()
 		DoScreenFadeOut(800)
@@ -137,7 +137,7 @@ function ExitProperty(name)
 		outside = GetGateway(property).outside
 	end
 
-	TriggerServerEvent('phoenix_property:deleteLastProperty')
+	TriggerServerEvent('esx_property:deleteLastProperty')
 
 	Citizen.CreateThread(function()
 		DoScreenFadeOut(800)
@@ -255,11 +255,11 @@ function OpenPropertyMenu(property)
 		if data.current.value == 'enter' then
 			TriggerEvent('instance:create', 'property', {property = property.name, owner = ESX.GetPlayerData().identifier})
 		elseif data.current.value == 'leave' then
-			TriggerServerEvent('phoenix_property:removeOwnedProperty', property.name)
+			TriggerServerEvent('esx_property:removeOwnedProperty', property.name)
 		elseif data.current.value == 'buy' then
-			TriggerServerEvent('phoenix_property:buyProperty', property.name)
+			TriggerServerEvent('esx_property:buyProperty', property.name)
 		elseif data.current.value == 'rent' then
-			TriggerServerEvent('phoenix_property:rentProperty', property.name)
+			TriggerServerEvent('esx_property:rentProperty', property.name)
 		end
 	end, function(data, menu)
 		menu.close()
@@ -332,7 +332,7 @@ function OpenGatewayOwnedPropertiesMenu(property)
 				TriggerEvent('instance:create', 'property', {property = data.current.value, owner = ESX.GetPlayerData().identifier})
 				ESX.UI.Menu.CloseAll()
 			elseif data2.current.value == 'leave' then
-				TriggerServerEvent('phoenix_property:removeOwnedProperty', data.current.value)
+				TriggerServerEvent('esx_property:removeOwnedProperty', data.current.value)
 			end
 		end, function(data2, menu2)
 			menu2.close()
@@ -373,9 +373,9 @@ function OpenGatewayAvailablePropertiesMenu(property)
 			menu2.close()
 
 			if data2.current.value == 'buy' then
-				TriggerServerEvent('phoenix_property:buyProperty', data.current.value)
+				TriggerServerEvent('esx_property:buyProperty', data.current.value)
 			elseif data2.current.value == 'rent' then
-				TriggerServerEvent('phoenix_property:rentProperty', data.current.value)
+				TriggerServerEvent('esx_property:rentProperty', data.current.value)
 			end
 		end, function(data2, menu2)
 			menu2.close()
@@ -402,7 +402,7 @@ function OpenCloakroomMenu(property, owner)
 	},	function(data, menu)
 		if data.current.value == 'player_dressing' then
 
-			ESX.TriggerServerCallback('phoenix_property:getPlayerDressing', function(dressing)
+			ESX.TriggerServerCallback('esx_property:getPlayerDressing', function(dressing)
 				local elements = {}
 
 				for i=1, #dressing, 1 do
@@ -418,7 +418,7 @@ function OpenCloakroomMenu(property, owner)
 					elements = elements
 				}, function(data2, menu2)
 					TriggerEvent('skinchanger:getSkin', function(skin)
-						ESX.TriggerServerCallback('phoenix_property:getPlayerOutfit', function(clothes)
+						ESX.TriggerServerCallback('esx_property:getPlayerOutfit', function(clothes)
 							TriggerEvent('skinchanger:loadClothes', skin, clothes)
 							TriggerEvent('esx_skin:setLastSkin', skin)
 
@@ -432,7 +432,7 @@ function OpenCloakroomMenu(property, owner)
 				end)
 			end)
 		elseif data.current.value == 'remove_cloth' then
-			ESX.TriggerServerCallback('phoenix_property:getPlayerDressing', function(dressing)
+			ESX.TriggerServerCallback('esx_property:getPlayerDressing', function(dressing)
 				local elements = {}
 
 				for i=1, #dressing, 1 do
@@ -448,7 +448,7 @@ function OpenCloakroomMenu(property, owner)
 					elements = elements
 				}, function(data2, menu2)
 					menu2.close()
-					TriggerServerEvent('phoenix_property:removeOutfit', data2.current.value)
+					TriggerServerEvent('esx_property:removeOutfit', data2.current.value)
 					ESX.ShowNotification(_U('removed_cloth'))
 				end, function(data2, menu2)
 					menu2.close()
@@ -522,7 +522,7 @@ end
 
 -- Property Inventory HUD  
 function OpenPropertyInventoryMenu(property, owner)
-	ESX.TriggerServerCallback("phoenix_property:getPropertyInventory", function(inventory)
+	ESX.TriggerServerCallback("esx_property:getPropertyInventory", function(inventory)
 		TriggerEvent("esx_inventoryhud:openPropertyInventory", inventory)
 	end, owner)
 end
@@ -542,7 +542,7 @@ AddEventHandler('esx:onPlayerSpawn', function()
 				Citizen.Wait(0)
 			end
 
-			ESX.TriggerServerCallback('phoenix_property:getLastProperty', function(propertyName)
+			ESX.TriggerServerCallback('esx_property:getLastProperty', function(propertyName)
 				if propertyName then
 					if propertyName ~= '' then
 						local property = GetProperty(propertyName)
@@ -565,20 +565,20 @@ AddEventHandler('esx:onPlayerSpawn', function()
 	end
 end)
 
-AddEventHandler('phoenix_property:getProperties', function(cb)
+AddEventHandler('esx_property:getProperties', function(cb)
 	cb(GetProperties())
 end)
 
-AddEventHandler('phoenix_property:getProperty', function(name, cb)
+AddEventHandler('esx_property:getProperty', function(name, cb)
 	cb(GetProperty(name))
 end)
 
-AddEventHandler('phoenix_property:getGateway', function(property, cb)
+AddEventHandler('esx_property:getGateway', function(property, cb)
 	cb(GetGateway(property))
 end)
 
-RegisterNetEvent('phoenix_property:setPropertyOwned')
-AddEventHandler('phoenix_property:setPropertyOwned', function(name, owned, rented)
+RegisterNetEvent('esx_property:setPropertyOwned')
+AddEventHandler('esx_property:setPropertyOwned', function(name, owned, rented)
 	SetPropertyOwned(name, owned, rented)
 end)
 
@@ -615,7 +615,7 @@ AddEventHandler('instance:onPlayerLeft', function(instance, player)
 	end
 end)
 
-AddEventHandler('phoenix_property:hasEnteredMarker', function(name, part)
+AddEventHandler('esx_property:hasEnteredMarker', function(name, part)
 	local property = GetProperty(name)
 
 	if part == 'entering' then
@@ -643,7 +643,7 @@ AddEventHandler('phoenix_property:hasEnteredMarker', function(name, part)
 	end
 end)
 
-AddEventHandler('phoenix_property:hasExitedMarker', function(name, part)
+AddEventHandler('esx_property:hasExitedMarker', function(name, part)
 	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
 end)
@@ -734,12 +734,12 @@ Citizen.CreateThread(function()
 			LastProperty            = currentProperty
 			LastPart                = currentPart
 
-			TriggerEvent('phoenix_property:hasEnteredMarker', currentProperty, currentPart)
+			TriggerEvent('esx_property:hasEnteredMarker', currentProperty, currentPart)
 		end
 
 		if not isInMarker and hasAlreadyEnteredMarker then
 			hasAlreadyEnteredMarker = false
-			TriggerEvent('phoenix_property:hasExitedMarker', LastProperty, LastPart)
+			TriggerEvent('esx_property:hasExitedMarker', LastProperty, LastPart)
 		end
 
 		if letSleep then

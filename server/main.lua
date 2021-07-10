@@ -16,7 +16,7 @@ function SetPropertyOwned(name, price, rented, owner)
 		local xPlayer = ESX.GetPlayerFromIdentifier(owner)
 
 		if xPlayer then
-			TriggerClientEvent('phoenix_property:setPropertyOwned', xPlayer.source, name, true, rented)
+			TriggerClientEvent('esx_property:setPropertyOwned', xPlayer.source, name, true, rented)
 
 			if rented then
 				xPlayer.showNotification(_U('rent_for', ESX.Math.GroupDigits(price)))
@@ -39,7 +39,7 @@ function RemoveOwnedProperty(name, owner, noPay)
 				local xPlayer = ESX.GetPlayerFromIdentifier(owner)
 
 				if xPlayer then
-					xPlayer.triggerEvent('phoenix_property:setPropertyOwned', name, false)
+					xPlayer.triggerEvent('esx_property:setPropertyOwned', name, false)
 
 					if not noPay then
 						if result[1].rented == 1 then
@@ -134,11 +134,11 @@ MySQL.ready(function()
 			})
 		end
 
-		TriggerClientEvent('phoenix_property:sendProperties', -1, Config.Properties)
+		TriggerClientEvent('esx_property:sendProperties', -1, Config.Properties)
 	end)
 end)
 
-ESX.RegisterServerCallback('phoenix_property:getProperties', function(source, cb)
+ESX.RegisterServerCallback('esx_property:getProperties', function(source, cb)
 	cb(Config.Properties)
 end)
 
@@ -161,16 +161,16 @@ AddEventHandler('esx_ownedproperty:getOwnedProperties', function(cb)
 	end)
 end)
 
-AddEventHandler('phoenix_property:setPropertyOwned', function(name, price, rented, owner)
+AddEventHandler('esx_property:setPropertyOwned', function(name, price, rented, owner)
 	SetPropertyOwned(name, price, rented, owner)
 end)
 
-AddEventHandler('phoenix_property:removeOwnedProperty', function(name, owner)
+AddEventHandler('esx_property:removeOwnedProperty', function(name, owner)
 	RemoveOwnedProperty(name, owner)
 end)
 
-RegisterNetEvent('phoenix_property:rentProperty')
-AddEventHandler('phoenix_property:rentProperty', function(propertyName)
+RegisterNetEvent('esx_property:rentProperty')
+AddEventHandler('esx_property:rentProperty', function(propertyName)
 	local xPlayer  = ESX.GetPlayerFromId(source)
 	local property = GetProperty(propertyName)
 	local rent     = ESX.Math.Round(property.price / Config.RentModifier)
@@ -178,8 +178,8 @@ AddEventHandler('phoenix_property:rentProperty', function(propertyName)
 	SetPropertyOwned(propertyName, rent, true, xPlayer.identifier)
 end)
 
-RegisterNetEvent('phoenix_property:buyProperty')
-AddEventHandler('phoenix_property:buyProperty', function(propertyName)
+RegisterNetEvent('esx_property:buyProperty')
+AddEventHandler('esx_property:buyProperty', function(propertyName)
 	local xPlayer  = ESX.GetPlayerFromId(source)
 	local property = GetProperty(propertyName)
 
@@ -191,18 +191,18 @@ AddEventHandler('phoenix_property:buyProperty', function(propertyName)
 	end
 end)
 
-RegisterNetEvent('phoenix_property:removeOwnedProperty')
-AddEventHandler('phoenix_property:removeOwnedProperty', function(propertyName)
+RegisterNetEvent('esx_property:removeOwnedProperty')
+AddEventHandler('esx_property:removeOwnedProperty', function(propertyName)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	RemoveOwnedProperty(propertyName, xPlayer.identifier)
 end)
 
-AddEventHandler('phoenix_property:removeOwnedPropertyIdentifier', function(propertyName, identifier)
+AddEventHandler('esx_property:removeOwnedPropertyIdentifier', function(propertyName, identifier)
 	RemoveOwnedProperty(propertyName, identifier)
 end)
 
-RegisterNetEvent('phoenix_property:saveLastProperty')
-AddEventHandler('phoenix_property:saveLastProperty', function(property)
+RegisterNetEvent('esx_property:saveLastProperty')
+AddEventHandler('esx_property:saveLastProperty', function(property)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	MySQL.Async.execute('UPDATE users SET last_property = @last_property WHERE identifier = @identifier', {
@@ -211,8 +211,8 @@ AddEventHandler('phoenix_property:saveLastProperty', function(property)
 	})
 end)
 
-RegisterNetEvent('phoenix_property:deleteLastProperty')
-AddEventHandler('phoenix_property:deleteLastProperty', function()
+RegisterNetEvent('esx_property:deleteLastProperty')
+AddEventHandler('esx_property:deleteLastProperty', function()
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	MySQL.Async.execute('UPDATE users SET last_property = NULL WHERE identifier = @identifier', {
@@ -220,8 +220,8 @@ AddEventHandler('phoenix_property:deleteLastProperty', function()
 	})
 end)
 
-RegisterNetEvent('phoenix_property:getItem')
-AddEventHandler('phoenix_property:getItem', function(owner, type, item, count)
+RegisterNetEvent('esx_property:getItem')
+AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local xPlayerOwner = ESX.GetPlayerFromIdentifier(owner)
 
@@ -274,8 +274,8 @@ AddEventHandler('phoenix_property:getItem', function(owner, type, item, count)
 	end
 end)
 
-RegisterNetEvent('phoenix_property:putItem')
-AddEventHandler('phoenix_property:putItem', function(owner, type, item, count)
+RegisterNetEvent('esx_property:putItem')
+AddEventHandler('esx_property:putItem', function(owner, type, item, count)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local xPlayerOwner = ESX.GetPlayerFromIdentifier(owner)
 
@@ -319,7 +319,7 @@ AddEventHandler('phoenix_property:putItem', function(owner, type, item, count)
 	end
 end)
 
-ESX.RegisterServerCallback('phoenix_property:getOwnedProperties', function(source, cb)
+ESX.RegisterServerCallback('esx_property:getOwnedProperties', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	MySQL.Async.fetchAll('SELECT name, rented FROM owned_properties WHERE owner = @owner', {
@@ -329,7 +329,7 @@ ESX.RegisterServerCallback('phoenix_property:getOwnedProperties', function(sourc
 	end)
 end)
 
-ESX.RegisterServerCallback('phoenix_property:getLastProperty', function(source, cb)
+ESX.RegisterServerCallback('esx_property:getLastProperty', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	MySQL.Async.fetchAll('SELECT last_property FROM users WHERE identifier = @identifier', {
@@ -339,7 +339,7 @@ ESX.RegisterServerCallback('phoenix_property:getLastProperty', function(source, 
 	end)
 end)
 
-ESX.RegisterServerCallback('phoenix_property:getPropertyInventory', function(source, cb, owner)
+ESX.RegisterServerCallback('esx_property:getPropertyInventory', function(source, cb, owner)
 	local xPlayer    = ESX.GetPlayerFromIdentifier(owner)
 	local blackMoney = 0
 	local money      = 0
@@ -370,7 +370,7 @@ ESX.RegisterServerCallback('phoenix_property:getPropertyInventory', function(sou
 	})
 end)
 
-ESX.RegisterServerCallback('phoenix_property:getPlayerDressing', function(source, cb)
+ESX.RegisterServerCallback('esx_property:getPlayerDressing', function(source, cb)
 	local xPlayer  = ESX.GetPlayerFromId(source)
 
 	TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
@@ -386,7 +386,7 @@ ESX.RegisterServerCallback('phoenix_property:getPlayerDressing', function(source
 	end)
 end)
 
-ESX.RegisterServerCallback('phoenix_property:getPlayerOutfit', function(source, cb, num)
+ESX.RegisterServerCallback('esx_property:getPlayerOutfit', function(source, cb, num)
 	local xPlayer  = ESX.GetPlayerFromId(source)
 
 	TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
@@ -395,8 +395,8 @@ ESX.RegisterServerCallback('phoenix_property:getPlayerOutfit', function(source, 
 	end)
 end)
 
-RegisterNetEvent('phoenix_property:removeOutfit')
-AddEventHandler('phoenix_property:removeOutfit', function(label)
+RegisterNetEvent('esx_property:removeOutfit')
+AddEventHandler('esx_property:removeOutfit', function(label)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
@@ -409,7 +409,7 @@ end)
 
 function payRent(d, h, m)
 	local tasks, timeStart = {}, os.clock()
-	print('[phoenix_property] [^2INFO^7] Paying rent cron job started')
+	print('[esx_property] [^2INFO^7] Paying rent cron job started')
 
 	MySQL.Async.fetchAll('SELECT * FROM owned_properties WHERE rented = 1', {}, function(result)
 		for k,v in ipairs(result) do
@@ -458,7 +458,7 @@ function payRent(d, h, m)
 		Async.parallelLimit(tasks, 5, function(results) end)
 
 		local elapsedTime = os.clock() - timeStart
-		print(('[phoenix_property] [^2INFO^7] Paying rent cron job took %s seconds'):format(elapsedTime))
+		print(('[esx_property] [^2INFO^7] Paying rent cron job took %s seconds'):format(elapsedTime))
 	end)
 end
 
